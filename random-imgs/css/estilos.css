@@ -1,0 +1,9 @@
+*{
+	box-sizing: border-box;
+}
+
+#images{
+
+	display: flex;
+	justify-content: space-between;
+}
