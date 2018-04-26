@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html><head>
+
+<title>St Valentin Game</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=0.2">
+<style media="all" type="text/css">@import "estilos.css";</style>
+<!--[if IE]>  
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+<![endif]-->  
+<!--[if !IE]><!-->  
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery-ui.js"></script>
+<!--<![endif]-->  
+<script src="inc/jPlayer/jquery.jplayer.min.js"></script>
+<script src="js/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
+</head>
+<body style="margin: 0 auto;">
+<div id="espanta" style="width:1920px;height:1080px;border:0;position:absolute;overflow:hidden;background: url(imagenes/loading.gif) no-repeat fixed center center transparent;">
+    <div id="papaNoel" style="cursor:pointer;height:240px; position:absolute;top:680px;left:-490px; display:none;">
+        <img id="papaNoelImg" src="imagenes/papa_noel.png" style="cursor:pointer;height:180px; position:absolute;" alt=''>
+    </div>
+  
+  <div id="cuadroPuntaje" style="float: left; position: absolute; height: 160px; border: 0px none; top: 780px; left: 1280px;z-index:1;">
+     <img id="labios" style="position:absolute;height:56px;border:0;top:45px;float:left;left:420px;display:none" alt="" src="imagenes/kiss.png">
+  
+  <div id="aciertos" style="position:relative;height:70px;float:right;top:-20px;text-align:right;left:490px"> 
+     <img id="lblPuntajeCentena" src="imagenes/numeros/0.png" style="position:relative;height:70px;display:none;margin-right:-4px;" alt="">
+     <img id="lblPuntajeDecena" src="imagenes/numeros/0.png" style="position:relative;height:70px;display:none;margin-right:-4px;" alt="">
+     <img id="lblPuntajeUnidad" src="imagenes/numeros/0.png" style="position:relative;height:70px;display:none" alt="">
+  </div>   
+
+  </div> 
+    
+    <div id="paquetes" style="position:absolute;border:0;top:0;left:0;"></div>
+    <div id="sobres" style="position:absolute;border:0;top:0;left:0;"></div>
+
+    <div id="jugador" style="position:absolute;height:350px;border:0;top:40px;left:990px;width:216px;overflow:hidden;display:none">
+            <img id="hombrecito" style="position:relative;height:350px;border:0;left:0px;" alt="" src="imagenes/caminata.png">
+    </div>
+    <div id="over" style="position:absolute;border:0;top:0;left:0;width:5000px;height:5000px;background-color:black;opacity:0.5;filter: alpha(opacity = 50);text-align:center;display:none;">
+    
+        <img id="ganaste" style="position:relative;height:420px;border:0;top:210px;display:none;" alt="" src="imagenes/ganaste.png">        
+    </div>
+    <div id="form" style="position:absolute;height:300px;border:0;top:220px;left:780px;display:none;">
+        <img id="heart" style="position:relative;height:360px;border:0;top:10px;display:block;" alt="" src="imagenes/pink_heart.png">
+        <form name="login_form" method="post" action="ganador.php" style="position:absolute;height:400px;border:0;top:120px;left:90px">
+            <label class="labels">Nombre</label>
+            <input type="text" id="user_name" name="user_name" class="inputName" />
+            <br/>
+            <label class="labels">Email</label>
+            <input type="email" id="email" name="email" class="inputMail"> 
+            <br/>
+            <input type="button" value="Guardar" id="Guardar" style="position:relative;left:68px" >
+    </form> 
+
+    </div>    
+<!--    <img id="titulo" style="float:left;position:absolute;height:280px;border:0;top:220px;left:760px;display:none;" alt="" src="imagenes/titulo.png"> -->
+    <img id="btnPlay" src="imagenes/playOver.png" style="cursor:pointer;height:180px; position:absolute;top:300px; left:840px;display:none;" alt=''>
+    <div id="fondo">
+        <img id="espantaBase" style="position:absolute;width:1920px;height:1080px;border:0;top:0;left:0;display:none;z-index:-1" alt="" src="imagenes/fondo_light.png">
+    </div>
+    <div id="jpId"></div>
+</div>
+<div class="hidden" style="display:none;">
+    <script type="text/javascript">
+            var ruta="";
+            var images = new Array();
+            function preload() {
+                for (i = 0; i < preload.arguments.length; i++) {
+                    images[i] = new Image();
+                    images[i].src = "imagenes/" + preload.arguments[i];
+                }
+            }
+            preload(
+                "fondo_light.png",
+                "titulo.png",
+                "ganaste.png",
+                "pink_heart.png",
+                "playOver.png",
+                "playUp.png",
+                "papa_noel.png",
+                "paquete.png",
+                "sobre.png",
+                "caminata.png",
+                "kiss.png",
+                "numeros/0.png",
+                "numeros/1.png",
+                "numeros/2.png",
+                "numeros/3.png",
+                "numeros/4.png",
+                "numeros/5.png",
+                "numeros/6.png",
+                "numeros/7.png",
+                "numeros/8.png",
+                "numeros/9.png"
+            );
+
+    </script>
+</div>
+<script>
+eval(function(p,a,c,k,e,d){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('9 u=1S;9 m=0;9 1w,O,p,F,L;9 1P;9 D={x:-1,y:-1};9 19={x:\'\',y:\'\'};9 1b={x:\'\',y:\'\'};9 T,W,2H;9 f=1;9 X=17;9 1m;9 P;9 $1r=$("#2V");9 22;9 1f={"1D":{"n":"1a","a":"1T"},"2I":{"n":"1a","a":"1T"},"k":{"a":"2D","c":"2c"},"25":{"a":"2D"},"3b":{"c":"35","8":"34"},"2a":{"a":"33"},"1F":{"a":"46","c":"12","8":"11","N-M":"3"},"38":{"a":"46","c":"12","8":"11","N-M":"3"},"3a":{"a":"46","c":"12","8":"11","N-M":"3"},"3e":{"a":"46","c":"12","8":"11","N-M":"3"},"31":{"a":"46","c":"12","8":"11"},"m":{"a":"1A","c":"36","8":"2b"},"1v":{"a":"1A","N-M":"-4"},"1k":{"a":"1A","N-M":"-4"},"1R":{"a":"1A"},"l":{"a":"2G","c":"40","n":"2P"},"v":{"a":"2G"},"1O":{"c":"2J","a":"2X"},"26":{"c":"2J","a":"2Y"},"1V":{"a":"3d","c":"3u","8":"3t"},"w":{"a":"2f","c":"3f","8":"3r"}};7 1E(){T=o.1n($(U).n());W=o.1n($(U).a());T=o.1n($(1B).n());W=o.1n($(1B).a());2H=(W/T);f=T/1a;$(\'#1p\').6({\'a\':W+\'d\',\'n\':T+\'d\'});9 Z,1j;1x(Z 2B 1f){1x(1j 2B 1f[Z]){$(\'#\'+Z).6(1j,(1f[Z][1j]*f)+"d")}};e(!1P){$(\'#1D\').6({\'a\':W+\'d\'})}$("#k").6({\'8\':(b($("#k").6(\'8\'))*f)+\'d\'});$("#l").6({\'8\':(b($("#l").6(\'8\'))*f)+\'d\'});e(X){$("#k").1y();1q();1i();$(\'#1h q\').3w(":3z").2k(7(2q,A){$(A).r();u++});$(\'#1c\').R(\'\');$(\'#1h\').R(\'\')}}$(1B).3q(7(){1E()});e(!2v.2z.2y){2v.2z.2y=7(2x,1H){1x(9 i=(1H||0),j=Q.3g;i<j;i++){e(Q[i]===2x){t i}}t-1}}7 2u(){9 1l=17;$(\'#1D\').6(\'3l\',\'\');$(\'#1V\').h();$(\'#1l\').h();$("#3o").2s(7(){e($(\'#2r\').1o()==""||$(\'#P\').1o()==""){3m("3k 3h 3p 3x")}J{1m=$(\'#2r\').1o();P=$(\'#P\').1o();1l=1C;$(\'#3y\').r();$(\'#1l\').3v("2Z");$(\'#w\').h();$(\'#w\').30(7(){$("#w").H("B","C/2W.z")},7(){$("#w").H("B","C/32.z")});$(\'#w\').2s(7(16){29()})}})}7 23(){9 14,1s,1J;14=b(m/1Z);1s=b((m%1Z)/10);1J=b(m%10);e(1s!=0||14>0){$(\'#1k\').H(\'B\',1W+\'C/1z/\'+o.21(1s)+\'.z\');$(\'#1k\').6({\'1u\':\'\'})}J{$(\'#1k\').6({\'1u\':\'24\'})}e(14>0){$(\'#1v\').H(\'B\',1W+\'C/1z/\'+14+\'.z\');$(\'#1v\').6({\'1u\':\'\'})}J{$(\'#1v\').6({\'1u\':\'24\'})}$(\'#1R\').H(\'B\',1W+\'C/1z/\'+1J+\'.z\')}7 2h(){$(\'#1p\').h();X=17;2o();$.3i("3s.3n",{1m:1m,P:P,m:m})}7 3j(){$(\'#1O\').h();$(\'#w\').h()}7 2o(){$(\'#26\').h();$(\'#l\').r()}7 1i(){$(\'#k\').h();$(\'#k\').1e({c:3A,8:(1a*f)},3c,"2U",7(){$(\'#k\').r();e(X){1q();1i()}});O=5+o.2d(o.2e()*15);1w=[];p=0;$(\'#1c\').R(\'\');9 1K=1a/O;1x(9 i=1;i<=O;i++){1w.4m((1K*(i-1))+o.2d(o.2e()*1K))}1Y=2g(7(){27()},2j)}7 1q(){$(\'#k\').6({\'a\':(2f*f)+\'d\',\'c\':(2c*f)+\'d\',\'8\':\'-\'+(2b*f)+\'d\'})}7 27(){e(p==O){28(1Y);t}e(b($(\'#k\').6(\'8\'))>=1w[p]){p++;9 q=2p 2m();q.B="C/1d.z";q.1Q="1d"+p;$(\'#1c\').2l(q);$(\'#1d\'+p).6({\'n\':(48*f)+\'d\',\'a\':(48*f)+\'d\',\'8\':b($(\'#k\').6(\'8\'))+\'d\',\'c\':b($(\'#k\').6(\'c\'))+b($(\'#k\').6(\'a\'))+\'d\'});$(\'#1d\'+p).h();$(\'#1d\'+p).1e({\'c\':(1S*f)+\'d\'},2A);e(p==O){28(1Y);t}}}7 29(){$(\'#1p\').r();$(\'#1V\').r();$(\'#1O\').r();$(\'#w\').r();$(\'#2a\').h();$(\'#4o\').h();$(\'#m\').h();$(\'#1R\').h();$(\'#l\').h();$(\'#1h\').R(\'\');$(\'#1c\').R(\'\');m=0;u=1S;X=1C;$(\'#m\').H("B","C/1z/0.z");$(\'#k\').1y();1q();1i();2g(7(){2h()},4p)}7 1G(S,Y,2n){t((b($(Y).6(\'8\'))<=b($(S).6(\'8\'))&&b($(S).6(\'8\'))<(b($(Y).6(\'8\'))+b($(2n).6(\'n\'))))||(b($(Y).6(\'8\'))>b($(S).6(\'8\'))&&b($(Y).6(\'8\'))<(b($(S).6(\'8\'))+b($(S).6(\'n\')))))}7 2T(){9 4r=$(\'#E\').1L();9 q=2p 2m();q.B="C/E.z";q.1Q="E"+u;9 c=b($(\'#k\').6(\'c\'))+b($(\'#k\').6(\'a\'))*1/2;$(\'#1h\').2l(q);$(\'#E\'+u).6({\'n\':(2i*f)+\'d\',\'a\':(2i*f)+\'d\',\'8\':b($(\'#l\').6(\'8\'))+\'d\',\'c\':(b($(\'#l\').6(\'c\'))+20)+\'d\'});$(\'#E\'+u).h();$(\'#E\'+u).1e({\'c\':c+\'d\'},{4k:2j,3B:7(4e){9 V=$(Q);$(\'#1c q\').2k(7(2q,A){e(1G(V,A,A)){e(b($(A).6(\'c\'))<=b($(V).6(\'c\'))&&(b($(A).6(\'c\'))+b($(A).6(\'a\')))>=b($(V).6(\'c\'))){$(V).1y();$(V).r()}}})},4f:7(){e(1G(Q,\'#k\',\'#25\')){m++;2R();23()}$(Q).r();e($(Q).H(\'1Q\').2K(\'E\',\'\')==1||m==3){}}});u--}7 1N(){e(F||!u||!X){t}F=1C;$(\'#v\').6({\'8\':(-4t*f)+\'d\'});G(7(){$(\'#v\').6({\'8\':(-4D*f)+\'d\'})},4C);G(7(){$(\'#v\').6({\'8\':(-4F*f)+\'d\'});2T()},4G);G(7(){$(\'#v\').6({\'8\':\'2M\'});F=17},4B)}7 1g(2O){e(F){t}F=1C;9 2N=$(\'#l\');9 I,L;I=2N.1L();e(2O){L=I.8+(20*f);13=[4A,1T,4v]}J{L=I.8-(20*f);13=[2P,4u,4w]}$(\'#v\').6({\'8\':\'-\'+(13[0]*f)+\'d\'});G(7(){$(\'#v\').6({\'8\':\'-\'+(13[1]*f)+\'d\'})},4x);G(7(){$(\'#v\').6({\'8\':\'-\'+(13[2]*f)+\'d\'})},4a);G(7(){$(\'#v\').6({\'8\':\'2M\'})},2Q);$(\'#l\').1e({8:L},2Q,7(){F=17})}7 2R(){22.4b($1r,"3M",{2F:"2S/1F.3L",1U:"2S/1F.1U"}).1t("3N")}9 $1X={};U.3O.3Q.2K(/\\??(?:([^=]+)=([^&]*)&?)/g,7(){7 1M(s){t 3P(s.3E("+").3D(" "))}$1X[1M(2w[1])]=1M(2w[2])});2L=$1X["2L"];$(U).2C(7(){9 3C=G(2u,2A);$(\'#1p\').6({\'a\':\'3F\',\'n\':\'3G\'});1P=(/3I|3H|3R|3S|43|42|44|45 49/i.41(3Z.3U.3T()));$(\'#2I\').h();22=$1r.1t;$1r.1t({3W:\'1t/3Y.3X\',3V:\'R, 47\',3J:"1U, 2F",3K:"1B",2C:7(){}});1E();$(U).4z(7(16){D.x=16.4E;D.y=16.4s});$(\'#l\').4h({4g:"L",4c:7(16){t $("<2E 4j=\'4q-4l-4n\'></2E>")},1H:7(){19.x=D.x;19.y=D.y},1y:7(){1b.x=D.x;1b.y=D.y;9 1I=19.x-1b.x;9 2t=19.y-1b.y;e(o.21(1I)>o.21(2t)){1g(1I<0)}J{1N()}}});$(U).4y(7(K){e(K.18==37||K.18==40||K.18==39){9 I=$(\'#l\').1L();e(K.18==37){e(I.8>=1Z){1g(0)}}J e(K.18==39){e(I.8<=(4d-b($(\'#l\').6(\'n\')))){1g(1)}}J{1N()}K.4i()}})});',62,291,'||||||css|function|left|var|height|parseInt|top|px|if|escalaEspanta||show|||papaNoel|jugador|aciertos|width|Math|paquetesLanzados|img|hide||return|intentos|hombrecito|btnPlay|||png|el|src|imagenes|currentMousePos|sobre|moviendo|setTimeout|attr|posicion|else|tecla|move|right|margin|cantPaquetes|email|this|html|obj1|ancho|document|esto|alto|jugando|obj2|vars||55|65|hombrecitoSeq|centena||event|false|keyCode|dragPos|1920|dropPos|paquetes|paquete|animate|escalas|MoverHombrecito|sobres|animarPapaNoel|lavar|lblPuntajeDecena|form|username|round|val|over|resetPapaNoel|player|decena|jPlayer|display|lblPuntajeCentena|lanzador|for|stop|numeros|70|window|true|espanta|escalar|kiss|enRango|start|posx|unidad|cada|position|decode|tirarSobre|tituloPerdiste|brMobile|id|lblPuntajeUnidad|50|1080|mp3|titulo|ruta|_GET|pepe|100|150|abs|jPlayer_method|cargaPuntos|none|papaNoelImg|ganaste|checkPosLanzado|clearInterval|jugar|puntaje|490|680|floor|random|180|setInterval|finDeJuego|60|1000|each|append|Image|obj3|mostrarFelicitaciones|new|index|user_name|click|posy|showInicio|Array|arguments|obj|indexOf|prototype|2000|in|ready|240|div|oga|350|proporcion|espantaBase|210|replace|idUsuario|0px|elemento|dir|216|600|playKiss|sonidos|deseosLanzados|linear|jpId|playUp|320|420|normal|hover|cruz5|playOver|160|1280|780|||cruz2||cruz3|cuadroPuntaje|15000|280|cruz4|300|length|completar|post|showReInicio|Debe|background|alert|php|Guardar|los|resize|840|ganador|760|220|fadeOut|filter|campos|login_form|animated|480|step|timerInit|join|split|1080px|1920px|webos|android|supplied|wmode|ogg|setMedia|play|location|decodeURIComponent|search|iphone|ipad|toLowerCase|userAgent|solution|swfPath|swf|Jplayer|navigator||test|blackberry|ipod|iemobile|opera||flash||mini|400|call|helper|1820|currentLeft|complete|cursor|draggable|preventDefault|class|duration|widget|push|header|labios|60000|ui|sobrePos|pageY|1512|432|1296|648|200|keydown|mousemove|864|990|330|1728|pageX|1944|660'.split('|'),0,{}))
+
+</script>
+
+</div>
+</body></html>

@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html><head>
+
+<title>St Valentin Game</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=0.2">
+<style media="all" type="text/css">@import "estilos.css";</style>
+<!--[if IE]>  
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+<![endif]-->  
+<!--[if !IE]><!-->  
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery-ui.js"></script>
+<!--<![endif]-->  
+<script src="inc/jPlayer/jquery.jplayer.min.js"></script>
+<script src="js/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
+</head>
+<body style="margin: 0 auto;">
+<div id="espanta" style="width:1920px;height:1080px;border:0;position:absolute;overflow:hidden;background: url(imagenes/loading.gif) no-repeat fixed center center transparent;">
+    <div id="papaNoel" style="cursor:pointer;height:240px; position:absolute;top:680px;left:-490px; display:none;">
+        <img id="papaNoelImg" src="imagenes/papa_noel.png" style="cursor:pointer;height:180px; position:absolute;" alt=''>
+    </div>
+  
+  <div id="cuadroPuntaje" style="float: left; position: absolute; height: 160px; border: 0px none; top: 780px; left: 1280px;z-index:1;">
+     <img id="labios" style="position:absolute;height:56px;border:0;top:45px;float:left;left:420px;display:none" alt="" src="imagenes/kiss.png">
+  
+  <div id="aciertos" style="position:relative;height:70px;float:right;top:-20px;text-align:right;left:490px"> 
+     <img id="lblPuntajeCentena" src="imagenes/numeros/0.png" style="position:relative;height:70px;display:none;margin-right:-4px;" alt="">
+     <img id="lblPuntajeDecena" src="imagenes/numeros/0.png" style="position:relative;height:70px;display:none;margin-right:-4px;" alt="">
+     <img id="lblPuntajeUnidad" src="imagenes/numeros/0.png" style="position:relative;height:70px;display:none" alt="">
+  </div>   
+
+  </div> 
+    
+    <div id="paquetes" style="position:absolute;border:0;top:0;left:0;"></div>
+    <div id="sobres" style="position:absolute;border:0;top:0;left:0;"></div>
+
+    <div id="jugador" style="position:absolute;height:350px;border:0;top:40px;left:990px;width:216px;overflow:hidden;display:none">
+            <img id="hombrecito" style="position:relative;height:350px;border:0;left:0px;" alt="" src="imagenes/caminata.png">
+    </div>
+    <div id="over" style="position:absolute;border:0;top:0;left:0;width:5000px;height:5000px;background-color:black;opacity:0.5;filter: alpha(opacity = 50);text-align:center;display:none;">
+    
+        <img id="ganaste" style="position:relative;height:420px;border:0;top:210px;display:none;" alt="" src="imagenes/ganaste.png">        
+    </div>
+    <div id="form" style="position:absolute;height:300px;border:0;top:220px;left:780px;display:none;">
+        <img id="heart" style="position:relative;height:360px;border:0;top:10px;display:block;" alt="" src="imagenes/pink_heart.png">
+        <form name="login_form" method="post" action="ganador.php" style="position:absolute;height:400px;border:0;top:120px;left:90px">
+            <label class="labels">Nombre</label>
+            <input type="text" id="user_name" name="user_name" class="inputName" />
+            <br/>
+            <label class="labels">Email</label>
+            <input type="email" id="email" name="email" class="inputMail"> 
+            <br/>
+            <input type="button" value="Guardar" id="Guardar" style="position:relative;left:68px" >
+    </form> 
+
+    </div>    
+<!--    <img id="titulo" style="float:left;position:absolute;height:280px;border:0;top:220px;left:760px;display:none;" alt="" src="imagenes/titulo.png"> -->
+    <img id="btnPlay" src="imagenes/playOver.png" style="cursor:pointer;height:180px; position:absolute;top:300px; left:840px;display:none;" alt=''>
+    <div id="fondo">
+        <img id="espantaBase" style="position:absolute;width:1920px;height:1080px;border:0;top:0;left:0;display:none;z-index:-1" alt="" src="imagenes/fondo_light.png">
+    </div>
+    <div id="jpId"></div>
+</div>
+<div class="hidden" style="display:none;">
+    <script type="text/javascript">
+            var ruta="";
+            var images = new Array();
+            function preload() {
+                for (i = 0; i < preload.arguments.length; i++) {
+                    images[i] = new Image();
+                    images[i].src = "imagenes/" + preload.arguments[i];
+                }
+            }
+            preload(
+                "fondo_light.png",
+                "titulo.png",
+                "ganaste.png",
+                "pink_heart.png",
+                "playOver.png",
+                "playUp.png",
+                "papa_noel.png",
+                "paquete.png",
+                "sobre.png",
+                "caminata.png",
+                "kiss.png",
+                "numeros/0.png",
+                "numeros/1.png",
+                "numeros/2.png",
+                "numeros/3.png",
+                "numeros/4.png",
+                "numeros/5.png",
+                "numeros/6.png",
+                "numeros/7.png",
+                "numeros/8.png",
+                "numeros/9.png"
+            );
+
+    </script>
+</div>
+<script>
+var intentos = 50;
+var aciertos = 0;
+var lanzador,cantPaquetes,paquetesLanzados,moviendo,move;
+var brMobile;
+var currentMousePos = { x: -1, y: -1 };
+var dragPos = {x:'',y:''};
+var dropPos = {x:'',y:''};
+var ancho,alto,proporcion;
+var escalaEspanta = 1;
+var jugando = false;
+var username;
+var email;
+var $player = $("#jpId");
+var jPlayer_method;
+
+var escalas = {"espanta":{"width":"1920","height":"1080"},"espantaBase":{"width":"1920","height":"1080"},"papaNoel":{"height":"240","top":"680"},"papaNoelImg":{"height":"240"},"cuadroPuntaje":{"top":"780","left":"1280"},"puntaje":{"height":"160"},"kiss":{"height":"46","top":"65","left":"55","margin-right":"3"},"cruz2":{"height":"46","top":"65","left":"55","margin-right":"3"},"cruz3":{"height":"46","top":"65","left":"55","margin-right":"3"},"cruz4":{"height":"46","top":"65","left":"55","margin-right":"3"},"cruz5":{"height":"46","top":"65","left":"55"},"aciertos":{"height":"70","top":"36","left":"490"},"lblPuntajeCentena":{"height":"70","margin-right":"-4"},"lblPuntajeDecena":{"height":"70","margin-right":"-4"},"lblPuntajeUnidad":{"height":"70"},"jugador":{"height":"350","top":"40","width":"216"},"hombrecito":{"height":"350"},"tituloPerdiste":{"top":"210","height":"320"},"ganaste":{"top":"210","height":"420"},"titulo":{"height":"280","top":"220","left":"760"},"btnPlay":{"height":"180","top":"300","left":"840"}};
+
+
+function escalar() {
+    ancho = Math.round($(document).width());
+    alto = Math.round($(document).height());
+    ancho = Math.round($(window).width());
+    alto = Math.round($(window).height());
+    proporcion = (alto/ancho);
+    /*if (proporcion < 0.5625 )
+    {
+        ancho = 192 * alto / 108;
+    }
+    else */
+    /*    if (proporcion > 0.5625)
+    {
+        alto = 108 * ancho / 192;
+    }*/
+    escalaEspanta = ancho / 1920;
+    
+    $('#over').css({'height':alto +'px','width':ancho +'px'});
+
+    var vars,lavar;
+    for (vars in escalas) { 
+        for (lavar in escalas[vars]) {
+            $('#' + vars).css(lavar , (escalas[vars][lavar] * escalaEspanta) + "px" );
+        };
+    };
+    if (!brMobile) {
+        $('#espanta').css({'height':alto + 'px'});
+    }
+
+    //papanoel altura paquetes y sobres altura ancho y largo, jugador left, over ancho y alto
+    
+    $("#papaNoel").css({'left':(parseInt($("#papaNoel").css('left'))*escalaEspanta) + 'px'});
+    $("#jugador").css({'left':(parseInt($("#jugador").css('left'))*escalaEspanta) + 'px'});
+    if (jugando) {
+        $("#papaNoel").stop();
+        resetPapaNoel();
+        animarPapaNoel();
+        //console.log($('#sobres img').filter(":animated"));
+        $('#sobres img').filter(":animated").each(function(index, el) {
+            $(el).hide();
+            intentos++;
+        });
+        $('#paquetes').html('');
+        $('#sobres').html('');
+    }
+
+    
+}
+$(window).resize(function() {
+    escalar();
+});
+
+if (!Array.prototype.indexOf) {
+    Array.prototype.indexOf = function(obj, start) {
+         for (var i = (start || 0), j = this.length; i < j; i++) {
+             if (this[i] === obj) { return i; }
+         }
+         return -1;
+    }
+}
+
+
+function showInicio(){
+
+    var form = false;
+
+    $('#espanta').css('background','');
+    //$('#espantaBase').show();
+    $('#titulo').show();
+    $('#form').show();
+    $("#Guardar").click(function(){
+
+        if($('#user_name').val() == "" || $('#email').val()=="" ){
+
+            alert("Debe completar los campos");
+        
+        }else{
+
+            username=$('#user_name').val();
+            email=$('#email').val();
+            form = true;
+
+               $('#login_form').hide();
+        $('#form').fadeOut("normal");
+        
+        $('#btnPlay').show();
+        
+        $('#btnPlay').hover(function() {
+            $("#btnPlay").attr("src","imagenes/playUp.png");
+        }, function() {
+            $("#btnPlay").attr("src","imagenes/playOver.png");
+        });
+
+        $('#btnPlay').click(function(event) {
+
+        jugar();
+        
+    });
+        }
+    });    
+
+}
+
+function cargaPuntos() {
+    var centena,decena,unidad;
+    centena = parseInt(aciertos / 100);
+    decena = parseInt((aciertos % 100) /10);
+    unidad = parseInt(aciertos % 10);
+
+    if (decena != 0 || centena > 0) {
+        $('#lblPuntajeDecena').attr('src',ruta + 'imagenes/numeros/' + Math.abs(decena) + '.png');
+        $('#lblPuntajeDecena').css({'display':''});
+    }
+    else {
+        $('#lblPuntajeDecena').css({'display':'none'});
+    }
+
+    if (centena > 0) {
+        $('#lblPuntajeCentena').attr('src',ruta + 'imagenes/numeros/' + centena + '.png');
+        $('#lblPuntajeCentena').css({'display':''});
+    }
+    else {
+       
+        $('#lblPuntajeCentena').css({'display':'none'});
+    }
+
+    $('#lblPuntajeUnidad').attr('src',ruta + 'imagenes/numeros/' + unidad + '.png');
+}
+
+function finDeJuego() {
+
+    $('#over').show();
+    jugando = false;
+   
+  //  if(aciertos >= 3 && idUsuario){
+        mostrarFelicitaciones();
+  //      $.post( "ganador.php", { idUsuario: idUsuario, aciertos: aciertos }); */
+          $.post( "ganador.php", { username: username, email: email, aciertos: aciertos });
+  /* 
+    }else {
+        showReInicio();
+    }
+  */      
+}
+
+function showReInicio(){
+
+
+    $('#tituloPerdiste').show();
+    $('#btnPlay').show();
+
+}
+
+
+function mostrarFelicitaciones(){
+
+
+   $('#ganaste').show();
+   $('#jugador').hide();
+ //   mostrar formulario
+
+
+}
+/*
+function mostrarAciertos(){
+
+    $('#aciertos').attr('src','imagenes/numeros/' + aciertos + '.png');
+
+}
+*/
+function animarPapaNoel(){
+
+    $('#papaNoel').show();
+    $('#papaNoel').animate({top: 480, left: (1920*escalaEspanta)}, 15000, "linear", function(){
+        $('#papaNoel').hide();
+        if (jugando) {
+            resetPapaNoel();
+            animarPapaNoel();
+        }
+
+    });
+    cantPaquetes = 5 + Math.floor(Math.random() * 15);
+    lanzador = [];
+    paquetesLanzados = 0;
+    $('#paquetes').html('');
+    var cada = 1920 / cantPaquetes;
+    for (var i=1;i<=cantPaquetes;i++){
+        lanzador.push(
+                (cada * (i-1)) + Math.floor(Math.random() * cada)
+            );
+    }
+    pepe = setInterval(function(){checkPosLanzado();},1000);
+
+}
+
+function resetPapaNoel(){
+    $('#papaNoel').css({'height':(180*escalaEspanta) + 'px', 'top':(680*escalaEspanta) + 'px','left':'-' + (490*escalaEspanta) + 'px'});
+}
+
+function checkPosLanzado() {
+    if (paquetesLanzados == cantPaquetes) {
+        clearInterval(pepe);
+        return;
+    }
+    //console.log('chequeando pos ' + $('#papaNoel').css('left') + " -> " + lanzador[paquetesLanzados] ) ;
+    if (parseInt($('#papaNoel').css('left')) >= lanzador[paquetesLanzados]) {
+        //console.log('llegue');
+        paquetesLanzados++;
+        var img = new Image();
+        img.src= "imagenes/paquete.png";
+        img.id="paquete" + paquetesLanzados;
+        //var top = parseInt($('#papaNoel').css('top')) + parseInt($('#papaNoel').css('height'));
+        /*img.width=80;
+        img.top=parseInt($('#papaNoel').css('top')) + parseInt($('#papaNoel').css('height'));*/
+
+        $('#paquetes').append(img);
+
+        $('#paquete' + paquetesLanzados).css({
+            'width': (48*escalaEspanta) + 'px',
+            'height': (48*escalaEspanta) + 'px',
+            'left':parseInt($('#papaNoel').css('left')) + 'px',
+            'top': parseInt($('#papaNoel').css('top')) + parseInt($('#papaNoel').css('height')) + 'px'
+        });
+
+        $('#paquete' + paquetesLanzados).show();
+
+        $('#paquete' + paquetesLanzados).animate({'top': (50*escalaEspanta) + 'px'}, 2000);
+
+        if (paquetesLanzados == cantPaquetes) {
+            clearInterval(pepe);
+            return;
+        }
+    }
+}
+
+function jugar(){
+
+        $('#over').hide();
+        $('#titulo').hide();
+        $('#tituloPerdiste').hide();
+        $('#btnPlay').hide();
+        $('#puntaje').show();
+        $('#labios').show();
+        $('#aciertos').show();
+        $('#lblPuntajeUnidad').show();
+        $('#jugador').show();
+        $('#sobres').html('');
+        $('#paquetes').html('');
+
+        aciertos = 0;
+        intentos = 50;
+
+        jugando = true;
+   
+        $('#aciertos').attr("src","imagenes/numeros/0.png");
+
+
+        $('#papaNoel').stop();
+        resetPapaNoel();
+        animarPapaNoel();
+
+        
+        /*$(document).keydown(function(tecla){
+
+                if (tecla.keyCode == 38) { // arriba
+                    var Move = posicion.top;
+                    $('#sobre').animate({top: Move}, 1000);
+                    deseosLanzados();
+                }   
+        }); */
+        
+        // Tenes 60 segundos 
+
+        setInterval(function() {
+            finDeJuego();
+        }, 60000);
+
+}
+function enRango(obj1, obj2, obj3) {
+/*console.log("element1 " + $(obj1).css('left'));
+console.log("element2 " + $(obj2).css('left'));*/
+    return ( ( parseInt($(obj2).css('left')) <= parseInt($(obj1).css('left')) &&
+                parseInt($(obj1).css('left')) < ( parseInt($(obj2).css('left')) + parseInt($(obj3).css('width')) ) )
+            || ( parseInt($(obj2).css('left')) > parseInt($(obj1).css('left')) &&  parseInt($(obj2).css('left')) < (parseInt($(obj1).css('left')) + parseInt($(obj1).css('width')) )) );
+}
+
+function deseosLanzados(){
+
+
+    //var papaPos = $('#papaNoel').position();
+    var sobrePos = $('#sobre').position();
+
+    var img = new Image();
+    img.src= "imagenes/sobre.png";
+    img.id="sobre" + intentos;
+    var top = parseInt($('#papaNoel').css('top')) + parseInt($('#papaNoel').css('height') ) *1/2;
+    /*img.width=80;
+    img.top=parseInt($('#papaNoel').css('top')) + parseInt($('#papaNoel').css('height'));*/
+
+    $('#sobres').append(img);
+
+    $('#sobre' + intentos).css({
+        'width': (60*escalaEspanta) + 'px',
+        'height': (60*escalaEspanta) + 'px',
+        'left':parseInt($('#jugador').css('left')) + 'px',
+        'top': (parseInt($('#jugador').css('top')) + 150) + 'px'
+    });
+
+    $('#sobre' + intentos).show();
+
+    $('#sobre' + intentos).animate({'top': top + 'px'},{ duration: 1000,
+        step: function( currentLeft ){
+                //console.log( "Top: ", currentLeft );
+                var esto = $(this);
+                $('#paquetes img').each(function(index, el) {
+                    if (enRango(esto,el,el)) {
+                        if ( parseInt($(el).css('top')) <= parseInt($(esto).css('top')) &&
+                                (parseInt($(el).css('top')) + parseInt($(el).css('height'))) >= parseInt($(esto).css('top')) ) {
+                        /*console.log("mi " + parseInt($(esto).css('top')));
+                        console.log("su top " + parseInt($(el).css('top')));
+                        console.log("su top + height " + (parseInt($(el).css('top')) + parseInt($(el).css('height'))) );*/
+                            $(esto).stop();
+                            $(esto).hide();
+                            //tacharSobres();                         
+                        // Modifique condicion de fin de juego  
+                          /*  if ($(esto).attr('id').replace('sobre','') == 1) {
+                                finDeJuego();
+                            }
+                          */  
+                        }
+                        //console.log("index " + index);
+                        //console.log("element " + $(el).css('left'));
+                        //console.log("element width " + $(el).css('width'));
+                    }
+                });
+                //console.log()
+                /*if (currentLeft <= 350) {
+                    $(this).stop();
+                    $(this).hide();                    
+                }*/
+               },
+        complete: function(){
+            //tacharSobres();
+        /*console.log('gordo left: ' + $('#papaNoel').css('left'));
+        console.log('gordo width: ' + $('#papaNoelImg').css('width'));
+        console.log('esto left: ' + $(this).css('left'));
+        console.log('esto width: ' + $(this).css('width'));*/
+        /*if ( ( parseInt($('#papaNoel').css('left')) <= parseInt($(this).css('left')) &&
+                parseInt($(this).css('left')) < ( parseInt($('#papaNoel').css('left')) + parseInt($('#papaNoelImg').css('width')) ) )
+            || ( parseInt($('#papaNoel').css('left')) > parseInt($(this).css('left')) &&  parseInt($('#papaNoel').css('left')) < (parseInt($(this).css('left')) + parseInt($(this).css('width')) ))
+          ) {*/
+        if (enRango(this,'#papaNoel','#papaNoelImg')) {
+            aciertos++;
+            playKiss();
+            //mostrarAciertos(); 
+            cargaPuntos();        
+        }
+        $(this).hide();
+        //console.log('sobre ' + $(this).attr('id').replace('sobre',''));
+        // Cambio de condicion de corte de juego
+        if ($(this).attr('id').replace('sobre','') == 1 || aciertos == 3) {
+          //  finDeJuego();
+        }
+    } });
+
+    intentos--;
+
+    /*if(papaPos == sobrePos){
+
+        aciertos++;
+        mostrarAciertos();
+        
+    }*/
+}
+
+/*function descIntentos() {
+    intentos--;
+    tacharSobres();    
+}*/
+
+function tirarSobre(){
+    if (moviendo || !intentos || !jugando) {
+        return;
+    }
+    moviendo = true;
+    $('#hombrecito').css({'left':(-1512*escalaEspanta) + 'px'});
+    setTimeout(function(){$('#hombrecito').css({'left':(-1728*escalaEspanta) + 'px'});}, 330);
+    //arrojar sobre
+    setTimeout(function(){
+        $('#hombrecito').css({'left':(-1944*escalaEspanta) + 'px'});
+        deseosLanzados();
+    }, 660);
+    //finalizar
+    setTimeout(function(){
+        $('#hombrecito').css({'left':'0px'});
+        moviendo = false;
+    }, 990);
+
+}
+
+function MoverHombrecito(dir){
+        if (moviendo) {
+            return;
+        }
+            moviendo = true;
+    var elemento = $('#jugador');
+    var posicion, move;
+    posicion = elemento.position();
+
+    //console.log( "left: " + posicion.left + ", top: " + posicion.top );
+    if (dir) {
+        move = posicion.left+(150*escalaEspanta);
+        hombrecitoSeq = [864, 1080, 1296];
+
+    }
+    else {
+        move = posicion.left-(150*escalaEspanta);
+        hombrecitoSeq = [216, 432, 648];
+
+    }
+
+    $('#hombrecito').css({'left':'-'+ (hombrecitoSeq[0]*escalaEspanta) +'px'});
+    setTimeout(function(){$('#hombrecito').css({'left':'-'+ (hombrecitoSeq[1]*escalaEspanta) +'px'});}, 200);
+    setTimeout(function(){$('#hombrecito').css({'left':'-'+ (hombrecitoSeq[2]*escalaEspanta) +'px'});}, 400);
+    setTimeout(function(){$('#hombrecito').css({'left':'0px'});}, 600);
+
+    $('#jugador').animate(
+                    {left: move}, 600, function() {
+                        moviendo =false;
+                        //posicion = elemento.position();
+                        //console.log( "left: " + posicion.left + ", top: " + posicion.top );
+                    });
+    
+}
+
+function playKiss() {
+   
+        jPlayer_method.call( $player, "setMedia", {
+            oga: "sonidos/kiss.ogg",
+            mp3: "sonidos/kiss.mp3" 
+        }).jPlayer("play");   
+}
+
+var $_GET = {};
+
+
+document.location.search.replace(/\??(?:([^=]+)=([^&]*)&?)/g, function () {
+    function decode(s) {
+        return decodeURIComponent(s.split("+").join(" "));
+    }
+
+    $_GET[decode(arguments[1])] = decode(arguments[2]);
+});
+idUsuario = $_GET["idUsuario"];
+
+$(document).ready(function(){
+    var timerInit = setTimeout(showInicio,2000);
+    /*ancho = $(window).width();
+    alto = $(window).height();
+    $('#espanta').css({'height':alto + 'px'});*/
+    $('#over').css({'height':'1080px','width':'1920px'});
+
+    brMobile = (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase()));
+    $('#espantaBase').show();
+
+    jPlayer_method = $player.jPlayer;
+    $player.jPlayer({
+        swfPath: 'jPlayer/Jplayer.swf',
+        solution: 'html, flash',
+        supplied: "mp3, oga",
+        wmode:"window",
+        ready: function () {
+
+        }
+
+    });
+
+   
+    /*if (!brMobile) {
+    /*}
+    else{*/
+        /*$("#espanta").ezBgResize({
+            img : "imagenes/fondo_light.png"
+        });*/
+        escalar();
+              
+    //}
+    $(document).mousemove(function(event) {
+        currentMousePos.x = event.pageX;
+        currentMousePos.y = event.pageY;
+    });
+    $('#jugador').draggable({
+        cursor: "move",
+        //cursorAt: { top: -12, left: -20 },
+        helper: function( event ) {
+        return $( "<div class='ui-widget-header'></div>" );
+        },
+        start:function(){
+            dragPos.x = currentMousePos.x;
+            dragPos.y = currentMousePos.y;
+            //console.log(dragPos);
+
+        },
+        stop:function(){
+            dropPos.x = currentMousePos.x;
+            dropPos.y = currentMousePos.y;
+            //console.log(dragPos);
+            //console.log(dropPos);
+            var posx = dragPos.x - dropPos.x;
+            var posy = dragPos.y - dropPos.y;
+            if (Math.abs(posx) > Math.abs(posy)) {
+                MoverHombrecito(posx < 0);
+            }
+            else {
+                tirarSobre();
+            }
+        }
+    });
+    $(document).keydown(function(tecla){
+
+        if (tecla.keyCode == 37 || tecla.keyCode == 40 || tecla.keyCode == 39) {
+            var posicion = $('#jugador').position();
+            if (tecla.keyCode == 37) {
+                if (posicion.left >= 100) { // izq
+                    MoverHombrecito(0);
+                }
+
+            }else if(tecla.keyCode == 39) {
+                if (posicion.left <= (1820 - parseInt($('#jugador').css('width')) ) ) { // der
+
+                    MoverHombrecito(1);
+                }
+            }
+            else {
+                tirarSobre();
+            }
+        tecla.preventDefault();
+        }
+    });
+});
+
+</script>
+
+</div>
+</body></html>
